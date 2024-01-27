@@ -1,13 +1,21 @@
 from pymongo import MongoClient
 from transformers import BertModel, BertTokenizer
 import torch
+from dotenv import load_dotenv
+import os
 
 model_name = 'bert-base-uncased'  # Example model; choose the one appropriate for your task
 tokenizer = BertTokenizer.from_pretrained(model_name)
 model = BertModel.from_pretrained(model_name)
 
 
-conn_str = 'mongodb+srv://anshviswanathan:CjB0XfBdxJ9jL70c@admitly.emkrmyt.mongodb.net/'
+# Load the environment variables from .env file
+load_dotenv()
+
+# Use the environment variable for the connection string
+conn_str = os.getenv('MONGODB_URI')
+if not conn_str:
+    raise ValueError("Please set the MONGODB_URI environment variable")
 client = MongoClient(conn_str)
 db = client['admitly']  # Replace 'database_name' with your database name
 collection = db['Pages']
